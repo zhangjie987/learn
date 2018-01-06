@@ -2,6 +2,7 @@ git init
 git status
 git diff readme.txt 
 git add readme.txt
+git add . #添加所有新增文件
 git commit -m "add distributed"
 git log
 git log --pretty=oneline

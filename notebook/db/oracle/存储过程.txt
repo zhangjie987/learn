@@ -1,9 +1,9 @@
-CREATE or REPLACE procedure P_PreOpInspect_TDView
+ï»¿CREATE or REPLACE procedure P_PreOpInspect_TDView
 (
-P_LineID varchar2,--ÎŞ³¤¶ÈÉùÃ÷
+P_LineID varchar2,--æ— é•¿åº¦å£°æ˜
 P_CheckDate DATE,
 P_PostCode VARCHAR2,
-P_Result OUT SYS_REFCURSOR--Êä³ö²ÎÊı
+P_Result OUT SYS_REFCURSOR--è¾“å‡ºå‚æ•°
 )
 IS
 p_count INT;
