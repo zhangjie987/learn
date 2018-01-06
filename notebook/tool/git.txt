@@ -1,3 +1,10 @@
+git add .
+git commit -m ""
+git push origin master
+
+git config --global user.email "zhangj.ie@foxmail.com"
+git config --global user.name "zhangjie987"
+
 git init
 git status
 git diff readme.txt 
@@ -11,7 +18,7 @@ git reset --hard HEAD^^ #上上一个版本
 git reset --hard 3628164 #回退到某个特定版本
 git checkout -- readme.txt #撤销，该命令的“--”如果没有表示切换到另外一个分支
 git rm test.txt
- 
+
 ssh-keygen -t rsa -C "zhangj.ie@foxmail.com"
  
 git remote add origin https://github.com/zhangjie987/learn.git
