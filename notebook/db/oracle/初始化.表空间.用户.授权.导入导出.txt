@@ -1,0 +1,34 @@
+https://localhost:1158/em/
+--环境变量
+NLS_LANG	SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+SIMPLIFIED CHINESE_CHINA.UTF8
+AMERICAN_AMERICA.UTF8
+
+sqlplus /nolog
+SQL> conn /as sysdba
+SQL> alter user system identified by "pass@word1";
+SQL> alter user sys identified by "pass@word1";
+SQL> alter user system account unlock;
+
+-- 删除表空间/用户
+drop user HEFEI_CONS cascade;
+drop tablespace HEFEI_CONS including contents and datafiles;
+
+导出数据：exp HEFEI_CONS/bingopassword@orcl file=D:\HEFEI_CONS.dmp owner=HEFEI_CONS
+导入数据：imp HEFEI_CONS/bingopassword@orcl file=D:\hefei_cons.dmp log=D:\log.txt ignore=y full=y STATISTICS=NONE
+-- 创建表空间
+CREATE TABLESPACE HEFEI_CONS DATAFILE 'D:\usr\oradata\HEFEI_CONS.dbf' SIZE 128M
+    DEFAULT STORAGE (
+    INITIAL 64K 
+    NEXT 1M 
+    MAXSIZE unlimited 
+    PCTINCREASE 0);
+	
+-- 创建用户    
+CREATE USER HEFEI_CONS IDENTIFIED BY bingopassword DEFAULT TABLESPACE HEFEI_CONS TEMPORARY TABLESPACE temp PROFILE default; 
+
+-- 授予用户权限  
+grant create any context,create database link,create synonym, create session,create table,create view,create sequence,unlimited tablespace to HEFEI_CONS;
+
+-- 授予用户dba权限，用于导入dmp文件  
+grant connect,resource to HEFEI_CONS;

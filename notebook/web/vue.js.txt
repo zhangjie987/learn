@@ -1,0 +1,27 @@
+//引入框架
+<script type="text/javascript" src="/Scripts/vue.min.js"></script>
+//待绑定数据
+var dataList = { planlist: [{ PlanCode: '无'}], powerlist: [{ PlanCode: '无'}] };
+//绑定数据
+new Vue({
+el: "#tbNotFinishPlan",
+data: dataList
+});
+new Vue({
+el: "#tbNotFinish",
+data: dataList
+});
+//数据展示HTML模板
+<table id="tbNotFinishPlan" runat="server" cellpadding="0" cellspacing="0" class="tableOne">
+	<tr v-for="(item,index) in planlist" v-if="planlist.length!=0">
+		<td style="width: 12px;">
+			{{item.PlanCode}}
+		</td>
+		......
+	</tr>
+	<tr v-if="planlist.length==0">
+		<td colspan="8">
+			无
+		</td>
+	</tr>
+</table>

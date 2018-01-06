@@ -1,0 +1,22 @@
+git init
+git status
+git diff readme.txt 
+git add readme.txt
+git commit -m "add distributed"
+git log
+git log --pretty=oneline
+git reset --hard HEAD^ #上一个版本
+git reset --hard HEAD^^ #上上一个版本
+git reset --hard 3628164 #回退到某个特定版本
+git checkout -- readme.txt #撤销，该命令的“--”如果没有表示切换到另外一个分支
+git rm test.txt
+ 
+ssh-keygen -t rsa -C "zhangj.ie@foxmail.com"
+ 
+git remote add origin https://github.com/zhangjie987/learn.git
+git remote add origin git@github.com:zhangjie987/learn.git
+git push -u origin master
+git push origin master
+git pull origin master
+
+git clone git@github.com:zhangjie987/learn.git
