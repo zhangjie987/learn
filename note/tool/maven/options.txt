@@ -1,0 +1,9 @@
+#ERROR:sun.security.validator.ValidatorException: PKIX path building failed: 
+#sun.security.provider.certpath.SunCertPathBuilderException: 
+#unable to find valid certification path to requested target
+-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
+
+-DskipTests  不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
+-Dmaven.test.skip=true  不执行测试用例，也不编译测试用例类。
+
+-P[profile.id] #应用POM文件profiles.profile.properties配置信息

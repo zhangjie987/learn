@@ -1,0 +1,40 @@
+
+#启动WebLogic
+D:\app\Oracle\Middleware\wls\user_projects\domains\base_domain\bin\startWebLogic.cmd
+
+#安装ohs NodeManager服务
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\installNodeMgrSvc.cmd
+#卸载ohs NodeManager服务
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\uninstallNodeMgrSvc.cmd
+
+#配置ohs（新增ohs组件）
+D:\app\Oracle\Middleware\ohs\oracle_common\common\bin\config.cmd
+#ohs组件 注册Webgate
+D:\app\Oracle\Middleware\ohs\webgate\ohs\tools\deployWebGate\deployWebGateInstance.bat  -w D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\config\fmwconfig\components\OHS\instances\ohs3 -oh D:\app\Oracle\Middleware\ohs
+#ohs组件 
+#export LD_LIBRARY_PATH=D:\app\Oracle\Middleware\ohs\lib
+set LD_LIBRARY_PATH=D:\app\Oracle\Middleware\ohs\lib
+D:\app\Oracle\Middleware\ohs\webgate\ohs\tools\EditHttpConf\EditHttpConf.exe -w D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\config\fmwconfig\components\OHS\instances\ohs3
+
+#启动NodeManager及ohs组件
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\startNodeManager.cmd
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\startComponent.cmd ohs1
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\startComponent.cmd ohs2
+
+#关闭NodeManager及ohs组件
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\stopComponent.cmd ohs1
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\stopComponent.cmd ohs2
+D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\bin\stopNodeManager.cmd
+
+config.cmd命令执行将使用以下文件1覆盖文件2：
+1.D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\config\fmwconfig\components\OHS\ohs2\mod_wl_ohs.conf
+2.D:\app\Oracle\Middleware\ohs\user_projects\domains\base_domain\config\fmwconfig\components\OHS\instances\ohs2\mod_wl_ohs.conf：
+<VirtualHost *:7790>
+ ProxyRequests Off
+ ProxyPassReverse / http://cm.hfgdjt.com:8001/
+ <Location />
+    ProxyPass http://cm.hfgdjt.com:8001/
+ </Location>
+  SetEnv force-proxy-request-1.0 1
+  SetEnv proxy-nokeepalive 1
+</VirtualHost>

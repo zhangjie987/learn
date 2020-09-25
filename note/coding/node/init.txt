@@ -1,0 +1,20 @@
+#初始化
+npm install -g yarn
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+yarn --version
+
+yarn global add @vue/cli
+yarn global remove @vue/cli
+
+#Vue CLI 包名称：@vue/cli，安装时候，可在命令行中访问 vue
+npm install -g @vue/cli
+vue --version
+#可使用 vue serve 和 vue build 命令对单个 *.vue 文件进行快速原型开发
+npm install -g @vue/cli-service-global
+
+#cd到{a}目录，创建App.vue文件，执行如下命令#默认入口文件推导main.js、index.js、App.vue 或 app.vue
+vue serve [App.vue]
+vue build #将目标文件构建成一个生产环境的包并用来部署
+vue create hello-world#创建项目
+	cd hello-world
+	yarn serve

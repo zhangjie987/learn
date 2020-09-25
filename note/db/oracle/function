@@ -1,0 +1,11 @@
+--Function
+create or replace function FN_GetGuid
+return varchar2
+is
+P_UUID varchar2(50);
+IDStr varchar2(50);
+begin
+  select lower(sys_guid()) into P_UUID from dual;
+  IDStr:=substr(P_UUID,1,8)||'-'||substr(P_UUID,9,4)||'-'||substr(P_UUID,13,4)||'-'||substr(P_UUID,17,4)||'-'||substr(P_UUID,21,12);
+  return IDStr;
+end FN_GetGuid;

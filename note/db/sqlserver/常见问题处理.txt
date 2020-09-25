@@ -1,0 +1,2 @@
+#数据库一直显示“正在还原”。 在这种状态下，由于未提交的事务没有回滚，导致数据库不可以访问
+restore database MetroConstrTest with recovery

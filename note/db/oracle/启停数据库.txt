@@ -1,0 +1,46 @@
+su - oracle
+sqlplus "/ as sysdba"
+sqlplus /nolog
+conn / as sysdba
+>shutdown immediate --停止服务
+>startup --启动服务
+lsnrctl stop
+
+重启：reboot/shutdown -r now/shutdown -r +10 #10分钟后重启/shutdown -r 10:00 #10点钟重启
+关机：root用户init 0
+
+用startup启动DB，查找参数文件优先级顺序（需先设置ORACLE_SID）
+1、spfileSID.ora
+2、spfile.ora
+3、initSID.ora
+
+>more /home/oracle/.bash_profile
+# .bash_profile
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+# User specific environment and startup programs
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/12.2.0.1/dbhome_1
+export ORACLE_SID=cons
+export TNS_ADMIN=$ORACLE_HOME/NETWORK/ADMIN/
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+export LANG=en_US
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ORACLE_HOME/bin
+export PATH
+
+# ORA-00205: error in identifying control file, check alert log for more info
+# 上述错误可能是控制文件所在磁盘未挂载导致控制文件鉴定错误，如psdb目录为空，则需要挂载数据盘：
+mount /dev/vdb1 /psdb
+
+#设置并是环境变量PATH生效：
+source /home/oracle/.bash_profile
+#Oracle启动文件目录：
+/oracle/app/product/11.2.0.4.0/dbhome_1/dbs 【配置文件：init$sid.ora】
+#查看ORACLE启动日志
+tail -f /oracle/app/diag/rdbms/hrtst/HRTST/trace/alert_HRTST.log
+#Oracle控制文件版本不一致导致无法启动数据库，多个控制文件为相互备份，避免文件损坏，无法启动数据
+#可以使用其中之一覆盖另外一个控制文件
+ORA-00214: control file '../control02.ctl' version 678730 inconsistent with file '../control01.ctl' version 678725

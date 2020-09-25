@@ -1,0 +1,65 @@
+【S3】
+S3接口地址	http://10.201.60.1:81
+AccessKey	65EA76DED848F8C59DF7
+SecurityKey	Wzc2QzZDMjRGQzJGQzUxNTZBQzZCOEQxQTJDQzE3MDUyMjk3OTBGOTdd
+
+【s3cmd】
+wget http://mirrors.aliyun.com/repo/Centos-7.repo -O /etc/yum.repos.d/CentOS-Base.repo
+yum makecache
+yum install -y epel-release
+yum install -y s3cmd
+
+s3cmd --configure	#生成配置文件，一路Enter，注意跳过Test并保存配置
+#修改以下项：
+$ vim /root/.s3cfg
+access_key = xxx
+access_token = xxx
+host_base = ip:port
+host_bucket = ip/kucketname
+use_https = False
+
+s3cmd mb --access_key=65EA76DED848F8C59DF7 --secret_key=Wzc2QzZDMjRGQzJGQzUxNTZBQzZCOEQxQTJDQzE3MDUyMjk3OTBGOTdd --host=http://10.201.60.1:81 s3://mtrcloud-courseware
+
+s3cmd --help	#查看具体使用方法
+s3cmd ls	#列举所有 Buckets
+s3cmd mb s3://my-bucket-name	#创建 bucket，且 bucket 名称是唯一的，不能重复
+s3cmd rb s3://my-bucket-name	#删除空 bucket
+s3cmd ls s3://my-bucket-name	#列举 Bucket 中的内容
+s3cmd put file.txt s3://my-bucket-name/file.txt	#上传 file.txt 到某个 bucket
+s3cmd put --acl-public file.txt s3://my-bucket-name/file.txt	#上传并将权限设置为所有人可读
+s3cmd put ./* s3://my-bucket-name/	#批量上传文件
+s3cmd get s3://my-bucket-name/file.txt file.txt #下载文件
+s3cmd get s3://my-bucket-name/* ./	#批量下载
+s3cmd del s3://my-bucket-name/file.txt	#删除文件
+s3cmd du -H s3://my-bucket-name	#来获得对应的bucket所占用的空间大小
+s3cmd setacl s3://myexamplebucket.calvium.com/ --acl-public --recursive	#设置S3 bucket的Public权限
+
+【s3fs】
+yum install -y s3fs-fuse
+yum remove -y s3fs-fuse
+
+yum install automake gcc-c++ git libcurl-devel libxml2-devel make openssl-devel
+git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+cd s3fs-fuse
+./autogen.sh
+./configure --prefix=/usr/local
+make && make install
+
+vi /etc/passwd-s3fs
+65EA76DED848F8C59DF7:Wzc2QzZDMjRGQzJGQzUxNTZBQzZCOEQxQTJDQzE3MDUyMjk3OTBGOTdd
+cd /etc
+chmod 600 passwd-s3fs
+
+#手动挂载
+s3fs -o url=http://10.201.60.1:81 -o use_path_request_style mtrcloud-courseware /opt/courseware/s3file
+
+#自动挂载
+vim /etc/fstab
+mtrcloud-courseware /opt/courseware/s3file fuse.s3fs _netdev,allow_other 0 0
+
+mount -l | grep s3fs
+tail -f /var/log/messages
+
+cp -r /opt/courseware/file/. /opt/courseware/s3file
+
+#linux之fstab文件详解	https://blog.csdn.net/richerg85/article/details/17917129

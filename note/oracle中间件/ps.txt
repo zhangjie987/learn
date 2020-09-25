@@ -1,0 +1,41 @@
+PeopleTools	> Application Designer > HRTEST:PS:PS
+
+Ctrl+J PS系统页面快捷查看页面组件名称等信息
+
+CI与组件关系表：PSBCDEFN
+PeopleBook:Integration Tools>PeopleSoft Component Interfaces
+
+VBA：
+F9-设置和取消“断点”
+Shift+F9-快速监视
+F8-逐语句调试
+Shift+F8-逐过程调试
+Ctrl+Shift+F8-跳出
+
+CI：		
+宏：alt+F11
+View..PeopleCode：F7+drag左侧tree，再drag到PeopleCode区域
+HFMCI_GPCN_CONT_EE
+	
+https://pan.baidu.com/s/1jXw0rbR7_j3UtP_sVcjMDQ#list/path=%2F	提取码：yjiw
+
+--NTP服务器设置：http://www.cnblogs.com/wangrx/p/6188387.html
+--设置NTP服务器
+ntpdate 192.168.14.11
+service ntpd start
+netstat -ln|grep 123
+rpm -qa|grep ntp
+vi /etc/ntp.conf
+
+PEOPLEBOOK：
+https://docs.oracle.com/cd/E41509_01/pt852pbh2/eng/psbooks/tpcr/chapter.htm?File=tpcr/htm/tpcr14.htm%23g037ee99c9453fb39_ef90c_10c791ddc07__1863
+http://geekswithblogs.net/BizTalkUnleashed/archive/2012/01/24/installing-peoplesoft-hrms-9.0-on-windows-server-2008-with-sql-again.aspx
+https://docs.oracle.com/cd/E41509_01/pt852pbh2/eng/psbooks/index.htm
+https://docs.oracle.com/cd/E83381_01/hcm92pbr13/eng/hcm/hgpy/task_DefiningArrayElements-e33662.html#u1b6320a0-8127-44eb-b973-f84d95e50fba
+https://docs.oracle.com/cd/E88471_01/hcm92pbr15/eng/hcm/index.html?focusnode=home
+
+psdmt DataMover
+
+PS/PS
+pscfg people/peop1e【注意：密码中的1是数字】
+

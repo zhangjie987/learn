@@ -1,0 +1,18 @@
+"D:\app\mongodb-4.2.1\bin\mongod.exe" --dbpath="D:\app\mongodb-4.2.1\data\db"
+"D:\app\mongodb-4.2.1\bin\mongo.exe"
+
+> use admin;
+> db.shutdownServer();
+
+show dbs	显示所有数据的列表
+db 			显示当前数据库对象或集合
+use 		连接到一个指定的数据库
+db.dropDatabase()
+db.[collection].drop()
+show tables
+show collections
+db.createCollection("users")
+db.[collection].remove({"id":"1"})
+
+"D:\app\mongodb-4.2.1\bin\mongodump.exe" -h localhost:27017 -d test -o d:\backup
+"D:\app\mongodb-4.2.1\bin\mongorestore.exe" -h localhost:27017 -d test d:\backup

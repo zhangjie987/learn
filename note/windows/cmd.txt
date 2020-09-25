@@ -1,0 +1,38 @@
+```bat
+::Forfiles 命令说明&用法示例 https://blog.csdn.net/sandy9919/article/details/82932460
+```
+
+```bat
+::遍历文件，输出文件信息
+forfiles /p F:\BSPRJ\MTRHR地铁人力\source\05.HeFeiYunYing\00\ /s /m *.* /d -1 /c "cmd /c echo @FILE"
+forfiles /p F:\BSPRJ\MTRHR地铁人力\source\05.HeFeiYunYing\00\ /s /m *.* /d -1 /c "cmd /c echo @PATH @fdate @ftime"
+```
+
+```bat
+::删除最后修改日期在/d参数之前1000天的文件 del命令：https://jingyan.baidu.com/article/77b8dc7fab95c16175eab64f.html
+forfiles /p F:\BSPRJ\MTRHR地铁人力\source\05.HeFeiYunYing\00\ /s /m *.* /d -1000 /c "cmd /c del /f /q /a @PATH"
+```
+
+```bat
+::0-需要查找的字符串
+::1-需要查找的文件
+findstr /i {0} {1}.txt > .\result.txt
+```
+
+```bat
+@echo off
+echo begin...
+set currentDir=%~dp0
+::单个文件拷贝
+xcopy %currentDir%src\main\webapp\mxgraph\grapheditor\index.html %currentDir%target\depot-web\mxgraph\grapheditor\index.html /y
+::拷贝目录，递归拷贝子目录及文件
+xcopy %currentDir%src\main\webapp\mxgraph\* %currentDir%target\depot-web\mxgraph\ /y /e /r
+echo end...
+::echo. & pause
+```
+
+
+# 磁盘清理-清理事件日志
+C:\Windows\system32>wevtutil cl security
+C:\Windows\system32>wevtutil cl system
+C:\Windows\system32>wevtutil cl application

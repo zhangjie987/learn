@@ -1,0 +1,5 @@
+mvn install:install-file -DgroupId="com.oracle.jdbc" -DartifactId=ojdbc7 -Dversion="12.1.0.2" -Dpackaging=jar -Dfile=C:/oracle/product/12.1.0/client_1/jdbc/lib/ojdbc7.jar
+
+mvn clean package -Pdev #应用POM文件profiles.profile.id为dev的properties配置信息
+
+mvn dependency:sources

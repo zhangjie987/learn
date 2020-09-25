@@ -1,0 +1,35 @@
+问题：SQLSERVER2012数据库服务无法启动，事件日志：无法恢复 master 数据库。SQL Server 无法运行。请利用完整备份还原 master 数据库，修复它，或者重新生成它
+处理办法：
+参考链接：https://blog.csdn.net/bamboopot/article/details/7845332
+1、从..\MSSQL10.MSSQLSERVER\MSSQL\Binn\Templates复制model.mdf、mastlog.ldf、model.mdf、modellog.ldf、msdbdata.mdf、msdblog.ldf文件到..\MSSQL10.MSSQLSERVER\MSSQL\DATA
+2、虚拟光驱装载ISO文件，cd到sqlserver安装目录，执行命令setup /ACTION=REBUILDDATABASE /QUIET /INSTANCENAME=MSSQLSERVER /SQLSYSADMINACCOUNTS=whrt\QYDB1ClusterAdmin
+3、启动MSSQLSERVER服务
+
+参考链接：https://wenku.baidu.com/view/9b14bcf003d8ce2f0166238a.html
+4、用SQL Server Configuration Manager工具打开后双击SQL SERVER 项目后打开高级选项，找到启动参数，在最后加上：;-m
+5、重启MSSQLSERVER服务
+6、打开SQL Server Management Studio，用WINDOWS集成身份验证登录，需注意，如果是WIN7以上操作系统要以管理员模式运行程序
+7、修改SA密码，然后将第4部的-m参数去掉再重启MSSQLSERVER
+8、使用SA登录数据库进行业务系统数据库附加及登录名重建等
+
+业务系统部分数据表访问或操作报错：The provided statistics stream is corrupt.
+参考链接：https://blog.csdn.net/david_520042/article/details/6049169
+
+如下sql执行会显示错误
+UPDATE STATISTICS SYS_LogonLog;
+UPDATE STATISTICS SM_DeviceFault;
+UPDATE STATISTICS BSD_PostStaffQualification;
+UPDATE STATISTICS CCR_MaterialInfo;
+
+修复数据库（需设置数据库为单用户模式）
+DBCC CHECKDB ('MTROPSM2016Wuhan', REPAIR_FAST)
+DBCC CHECKDB ('MTROPSM2016Wuhan', REPAIR_REBUILD)
+DBCC CHECKDB ('MTROPSM2016Wuhan', REPAIR_ALLOW_DATA_LOSS)
+
+alter database MTROPSM2016Wuhan set emergency
+alter database MTROPSM2016Wuhan set online
+
+ALTER DATABASE MTROPSM2016Wuhan SET SINGLE_USER
+ALTER DATABASE MTROPSM2016Wuhan SET MULTI_USER
+
+执行后还有部分数据表执行UPDATE STATISTICS [TableName]依旧报错，就重建表把数据迁移到新表的方式进行

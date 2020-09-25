@@ -1,0 +1,2 @@
+--#查看表数据量
+select 'select '''||table_name||''',count(*) from '||table_name||' union ' from user_tables

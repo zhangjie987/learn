@@ -1,0 +1,19 @@
+select file#,name from v$datafile;
+select file#,name from v$controlfile;
+select name from v$database;
+show parameter;
+show parameter spfile;
+show parameter control_files;
+
+startup 启动次序 spfile优先于pfile。查找文件的顺序是 spfileSID.ora-〉spfile.ora-〉initSID.ora-〉init.ora
+
+#修改参数值，scope：memory立即生效，spfile下次启动生效
+alter system set [parameter_name]=? scope=both/memory/spfile;
+
+create pfile from spfile;
+create spfile[='xxxxx'] from pfile[='xxxx'];
+create pfile[='xxxxx'] from spfile[='xxxx'];
+
+
+select instance_name from v$instance;
+select global_name from global_name;

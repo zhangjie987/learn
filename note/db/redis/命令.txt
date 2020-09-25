@@ -1,0 +1,17 @@
+D:\app\redis-3.2.100\redis-cli.exe -p 6379 -a [password]
+D:\app\redis-3.2.100\redis-cli.exe -h 10.253.7.11 -p 6379 -a password1
+auth [password] #HFCons1234
+set key value
+get key
+keys * #查看所有Key
+del key
+dbsize #返回当前数据库的 key 的数量
+flushall #清空缓存
+
+service iptables stop
+
+
+https://redis.io/commands
+
+#Windows版本
+https://github.com/MicrosoftArchive/redis/tags

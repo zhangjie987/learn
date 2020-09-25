@@ -1,0 +1,6 @@
+analyze table [table_name] #统计结果可使用select * from information_schema.tables where table_name='TN'进行查询
+
+show create table [T_N]
+
+-- alter table [TN] DISCARD TABLESPACE;-- 清理表空间，ibd文件会被删除
+-- alter table [TN] IMPORT TABLESPACE;-- 导入表空间，加载ibd文件

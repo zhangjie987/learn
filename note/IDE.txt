@@ -1,0 +1,26 @@
+Idea:
+查找类/文件   Ctrl+Shift+N
+查找Java类文件 Ctrl+N
+查找所有实现类	Ctrl+Alt+B
+查看类方法 Ctrl+F12
+查看类层次结构	Ctrl+H
+折叠/展开代码块 Ctrl -       Ctrl Shift -   Ctrl +      Ctrl Shift +
+格式化	Ctrl+Alt+L
+Tool框：Alt组合   1-Project   7-Structure   9-VersionControl   F12-Terminal
+鼠标选择元素 Alt+Insert
+
+Eclipse:
+显示大纲		Ctrl+O
+查看所有实现类	Ctrl+T
+编辑窗口最大化	Ctrl+m
+快速修复		Ctrl+1
+注释			Ctrl+/
+Override		Alt+/
+查找Java类文件	Ctrl+Shift+T
+全局查找		Ctrl+H
+后退历史记录	Alt+←、Alt+→
+VSCode	快速打开最近打开的文件	Ctrl+P
+C:\Users\zjixm\AppData\Roaming\Code\User\settings.json	多开窗口	"workbench.editor.enablePreview": false
+
+VSCode
+折叠代码块	Ctrl+K+4

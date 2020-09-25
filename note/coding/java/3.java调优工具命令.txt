@@ -1,0 +1,6 @@
+D:
+cd D:\app\Java\jdk1.8.0_151\bin
+jvisualvm.exe	#VisualVM控制台
+jstack -l [pid]	#查看进程中的各个线程的方法栈信息
+jmap -dump:format=b,file=D:/heamdump.out [pid]	#生成DUMP文件
+jhat -J-Xmx10240M D:/heamdump.out	#分析DUMP文件

@@ -1,0 +1,25 @@
+wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-server-8.0.19-1.el7.x86_64.rpm
+wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-client-8.0.19-1.el7.x86_64.rpm
+groupadd mysql
+useradd -g mysql mysql
+passwd mysql
+mkdir /mysql
+chown mysql:mysql mysql
+yum install libaio
+
+#error: Failed dependencies mysql-community-client(x86-64) >= 8.0.11 is needed by mysql-community-se
+rpm -ivh mysql-community-server-8.0.19-1.el7.x86_64.rpm --nodeps --force
+rpm -ivh mysql-community-client-8.0.19-1.el7.x86_64.rpm --nodeps --force
+mysqld --initialize --user=mysql
+cat /var/log/mysqld.log
+
+service mysqld start
+
+mysql -u root -p :dx>Mmz6rh/O
+alter user 'root'@'localhost'identified by 'pass@word2020'
+
+create user 'root'@'%' identified by 'pass@word2020';
+grant all privileges on *.* to 'root'@'%';
+flush privileges;
+
+grant all privileges on %database_name.* to 'username'@'localhost';

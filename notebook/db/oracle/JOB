@@ -1,0 +1,36 @@
+--查看已有JOB
+select * from user_jobs
+select * from dba_jobs_running;
+select * from dba_jobs;
+
+--删除JOB
+call dbms_job.remove(25);
+commit;
+
+--执行JOB
+call dbms_job.run(25);
+
+--创建JOB
+DECLARE X NUMBER;
+BEGIN  
+SYS.DBMS_JOB.SUBMIT
+( job => X
+,what => '
+--update PL_CoopOrg set cooprequirement=''无'' where cooprequirement is null or cooprequirement='''';
+--update pl_workdetail set PlanNote=''无'' where PlanNote is null or PlanNote='''';
+update pl_workdetail set AffectContent=''无''
+  where (AffectContent is null or AffectContent='''')
+  and planid in (select planid from pl_workplan where formstatuscode!=''Draft'');
+update pl_workdetail set OtherCoopOrgInfo=''无''
+  where (UseCarDesc is null or UseCarDesc='''')
+  and (OtherCoopOrgInfo is null or OtherCoopOrgInfo='''')
+  and not exists(select 1 from pl_cooporg where workdetailid=pl_workdetail.workdetailid)
+  and planid in (select planid from pl_workplan where formstatuscode!=''Draft'');
+'
+,next_date => sysdate
+,interval => 'sysdate+1/(24*6)'  
+,no_parse => TRUE
+);
+COMMIT;
+END;
+/

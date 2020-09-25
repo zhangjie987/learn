@@ -1,0 +1,53 @@
+sqlplus sys/wenbo2019@192.168.14.118:1521/cnos as sysdba
+
+create tablespace HEFEI_CONS datafile '+DATA/CNOS/DATAFILE/HEFEI_CONS01.dbf' SIZE 6120M DEFAULT STORAGE (INITIAL 64K NEXT 1M MAXSIZE unlimited PCTINCREASE 0);
+alter tablespace HEFEI_CONS add datafile '+DATA/CNOS/DATAFILE/HEFEI_CONS02.dbf' SIZE 6120M;
+
+create directory consbackup as '/u01/app/oracle/CONS/CONSBACKUP';
+CREATE USER HEFEI_CONS IDENTIFIED BY bingopassword DEFAULT TABLESPACE HEFEI_CONS TEMPORARY TABLESPACE temp PROFILE default;
+GRANT READ,WRITE ON DIRECTORY consbackup to HEFEI_CONS;
+grant create any context,create database link,create synonym, create session,create table,create view,create sequence,unlimited tablespace to HEFEI_CONS;
+grant connect,resource to HEFEI_CONS;
+
+关注参数：ORACLE_SID与TNS_ADMIN
+TNS_ADMIN=/u01/app/product/12.2.0/dbhome_1/network/admin
+export TNS_ADMIN
+
+scp /u01/app/oradata/cons/consbackup/CONS201904181200.DMP root@192.168.14.118:/u01/app/oracle/CONS/CONSBACKUP
+>hfmetro@1
+
+--dmp文件授权
+chown oracle CONS201904181200.DMP
+impdp HEFEI_CONS/bingopassword@cnos DIRECTORY=consbackup DUMPFILE=CONS201904181200.DMP
+
+
+>su - grid
+>asmcmd
+
+
+>su - oracle
+1.3.1 数据库与实例
+srvctl config database # 列出安装的数据库
+srvctl config database -d [dbname] -a # 检查数据库相关的信息
+srvctl status database -d [dbname] # 检查数据库的状态
+srvctl status instance -d [dbname] -i [cnos1/cnos2] # 检查指定实例的状态
+srvctl config asm -a # ASM配置
+srvctl status asm # ASM的状态
+srvctl start database -d [dbname] # 启动数据库
+srvctl stop database -d [dbname] # 关闭数据库
+srvctl start instance -d [dbname] -i cnos1 # 启动指定的实例
+srvctl stop instance -d [dbname] -i cnos1 # 关闭指定实例
+【示例-合肥施工/维修Oracle RAC】
+srvctl stop instance -d CNOS -i cnos1
+srvctl stop instance -d HFMETRO -i hfmetro1
+srvctl stop instance -d CNOS -i cnos2
+srvctl stop instance -d HFMETRO -i hfmetro2
+
+1.3.2 网络相关的命令 
+srvctl status listener # 检查TNS listener的状态
+srvctl config scan # SCAN的配置
+srvctl status scan # SCAN listener状态, 包含当前运行节点的信息
+
+# 检查VIP的配置及状态
+srvctl status vip -n rac1
+srvctl config vip -n rac1

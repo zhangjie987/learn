@@ -1,0 +1,116 @@
+https://localhost:1158/em/
+--环境变量
+NLS_LANG	SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+SIMPLIFIED CHINESE_CHINA.UTF8
+AMERICAN_AMERICA.UTF8
+
+Linux：sqlplus/rman乱码：
+export NLS_LANG="AMERICAN_AMERICA.UTF8"
+
+-- Oracle监听管理
+lsnrctl status
+lsnrctl stop
+lsnrctl start
+
+本机oracle用户：sys/HEFEI_CONS/ACC，密码：bingopassword
+
+SQL Plus登录:
+acc/1234Abcd@10.2.75.186:1521/acc1
+sys/Abcd1234@10.2.75.186:1521/acc1 as sysdba
+sys/bingopassword@orcl as sysdba
+sys/bingopassword@127.0.0.1:1521/orcl as sysdba
+@[SQL File Path]--导入sql数据文件，文件在客户端，不需要上传到服务器
+
+D:\>sqlplus SYSADM/SYSADM@192.168.18.38:1522/HRPRD
+@f.SQL --SQL文件存放到D盘下
+
+sqlplus / as sysdba
+sqlplus sys/maximo@orcl as sysdba;
+sqlplus /nolog
+SQL> conn /as sysdba
+SQL> alter user system identified by "pass@word1";
+SQL> alter user sys identified by "pass@word1";
+SQL> alter user system account unlock;
+SQL> --alter user acc account unlock;
+--密码过期策略：用不过期
+SQL> alter profile default limit password_life_time unlimited;
+
+-- 删除表空间/用户
+drop user HEFEI_CONS cascade;
+drop tablespace HEFEI_CONS including contents and datafiles;
+
+create directory dbbackup as '/u01/dbbackup/';
+GRANT READ,WRITE ON DIRECTORY dbbackup to HEFEI_CONS;
+
+create directory consbackup as 'D:\usr\oradata';
+create directory consbackup as '/u01/app/oracle/oradata/CONS/datafile/';
+
+导出数据：exp HEFEI_CONS/bingopassword@orcl file=D:\HEFEI_CONS.dmp owner=HEFEI_CONS
+导入数据：imp HEFEI_CONS/bingopassword@orcl file=D:\hefei_cons.dmp log=D:\log.txt ignore=y full=y STATISTICS=NONE
+
+impdp HEFEI_CONS/bingopassword@cons DIRECTORY=consbackup DUMPFILE=CONS20180517.DMP
+impdp HEFEI_CONS/bingopassword@orcl DIRECTORY=consbackup DUMPFILE=CONS201801301111.DMP exclude=statistics
+impdp HEFEI_CONS/bingopassword@192.168.14.112/orcl DIRECTORY=consbackup DUMPFILE=CONS201801301111.DMP exclude=statistics
+expdp HEFEI_CONS/bingopassword@orcl schemas=HEFEI_CONS directory=consbackup dumpfile=cons20181102.DMP logfile=cons20181102.log version=11.2.0.1.0
+expdp  maximo/maximo@max76  schemas=maximo directory=dbbackup dumpfile=MAXIMO201801201121.DMP logfile=MAXIMO201801201121.log version=11.2.0.1.0
+
+-- 创建表空间
+-- CREATE TABLESPACE HEFEI_CONS DATAFILE '/u01/app/oracle/oradata/CONS/datafile/HEFEI_CONS.dbf' SIZE 2048M
+CREATE TABLESPACE HEFEI_CONS DATAFILE 'D:\usr\oradata\HEFEI_CONS.dbf' SIZE 2048M DEFAULT STORAGE (INITIAL 64K NEXT 1M MAXSIZE unlimited PCTINCREASE 0);
+	
+-- 创建用户    
+CREATE USER HEFEI_CONS IDENTIFIED BY bingopassword DEFAULT TABLESPACE HEFEI_CONS TEMPORARY TABLESPACE temp PROFILE default; 
+
+-- 修改用户密码
+alter user HEFEI_CONS identified by bingopassword
+
+-- 授予用户权限  
+grant create any context,create database link,create synonym, create session,create table,create view,create sequence,unlimited tablespace to HEFEI_CONS;
+
+-- 授予用户dba权限，用于导入dmp文件  
+grant connect,resource to HEFEI_CONS;
+
+GRANT READ,WRITE ON DIRECTORY consbackup to HEFEI_CONS;
+
+
+--设置密码用不过期
+sqlplus / as sysdba
+SELECT username,PROFILE FROM dba_users;
+SELECT * FROM dba_profiles s WHERE s.profile='DEFAULT' AND resource_name='PASSWORD_LIFE_TIME';
+ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+commit
+
+select * from dba_roles;  --角色
+select * from dba_role_privs where grantee='OAPRD';  --账号所属角色
+select * from dba_sys_privs where grantee='PSADMIN';  --角色权限
+--用户授权
+grant select,insert,update,delete on sysadm.PS_HFM_HR_TRN_REQS to OAPRD;
+grant select,insert,update,delete on sysadm.PS_HFM_HR_TERMINAL to OAPRD;
+grant select on sysadm.ps_hfm_dept_rpt to OAPRD;
+grant select on sysadm.PS_HFM_POSITION_RP to OAPRD;
+commit;
+
+
+select * from dba_sys_privs where privilege like '%ANY TABLE%';--查看权限
+
+create user bmsoft identified by QAZwsx_123;--创建用户
+grant connect to bmsoft;--授连接权限
+grant select on sysadm.PS_HFM_BM_PERSON_INTF to bmsoft;--授予查询表数据的权限
+grant select on sysadm.PS_HFM_BM_PERSON_PHONE to bmsoft;
+
+CREATE ROLE SELECT_ROLE--只拥有查询权限的角色
+DROP ROLE SELECT_ROLE--删除角色
+grant SELECT ANY DICTIONARY to SELECT_ROLE;--给角色授查询权限
+grant SELECT ANY TABLE to SELECT_ROLE;
+grant SELECT ANY TRANSACTION to SELECT_ROLE;
+grant SELECT ANY SEQUENCE to SELECT_ROLE;
+grant SELECT_ROLE to bmsoft;--给用户授予角色
+commit;
+
+
+CREATE ROLE HR_PS_REPORT;  --角色名称：系统_模块_功能
+grant CONNECT to HR_PS_REPORT;
+grant SELECT ANY TABLE to HR_PS_REPORT;
+create user bingo_report identified by EDCrfv_123;  --用户名称：公司_功能
+grant HR_PS_REPORT to bingo_report;
+commit;

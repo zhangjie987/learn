@@ -1,0 +1,22 @@
+connect target sys/wenbo2019@hfmetro
+run {
+allocate channel d1 device type disk connect 'sys/wenbo2019@hfmetro2';
+allocate channel d2 device type disk connect 'sys/wenbo2019@hfmetro2';
+allocate channel d3 device type disk connect 'sys/wenbo2019@hfmetro2';
+backup full database format "/u01/app/oracle/rman/dbs/hfmetro/%T_full_%d_%s_%p.bak" tag='hfmetro_full' include current controlfile;
+sql 'alter database backup controlfile to trace';
+sql 'alter system archive log current';
+#backup archivelog all format "/u01/app/oracle/rman/dbs/hfmetro/%T_archivelog_%d_%s_%p.bak" delete all input;
+backup archivelog all format "/u01/app/oracle/rman/dbs/hfmetro/%T_archivelog_%d_%s_%p.bak";
+release channel d1;
+release channel d2;
+release channel d3;
+}
+crosscheck backup;
+crosscheck archivelog all;
+delete noprompt archivelog all completed before 'sysdate - 7';
+#delete noprompt expired backup;
+#delete noprompt obsolete;
+exit
+EOF
+;

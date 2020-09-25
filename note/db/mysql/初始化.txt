@@ -1,0 +1,27 @@
+Windows下.zip包安装
+mysqld --initialize #初始化，生成默认的data目录及库
+
+my.ini文件配置：
+[mysqld]
+skip-grant-tables #首次登录调过密码认证配置，然后手动修改密码
+
+use mysql;
+update user set authentication_string=password('Abcd1234') where user='root';
+alter user 'root'@'localhost' identified by 'Abcd1234';
+
+
+升级MySQL5.6.15到MySQL5.7.25
+下载：
+	https://dev.mysql.com/downloads/mysql/5.7.html#downloads
+	https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-5.7.25-winx64.zip
+	https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-5.7.25-win32.zip
+1、将mysql5.6的data目录和my.ini文件拷贝至mysql5.7下
+   my.ini中，版本5.6的配置，有一些在版本5.7下面已经不能用，通过启动错误日志来判别
+   遇到MSVCR120.dll文件丢失错误：安装Visual C++ Redistributable Packages for Visual Studio 2013：https://www.microsoft.com/en-us/download/details.aspx?id=40784
+2、net start mysql5.7
+	遇到如下unknown variable提示，则从ini文件移除相应variable
+	unknown variable 'thread_concurrency=32'
+	unknown variable 'innodb_additional_mem_pool_size=512M'
+	unknown variable 'innodb_file_io_threads=16'
+3、mysql_upgrade -uroot -p???
+4、重启mysql

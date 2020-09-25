@@ -1,0 +1,26 @@
+
+F:\01.java\00.bin\hadoop-2.7.5\bin>
+hadoop jar ../share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.5.jar grep input output 'dfs[a-z.]+'
+hadoop jar ../share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.5.jar grep input output 'a[a-z.]+'
+hdfs dfs -rm -r output
+hdfs dfs -cat output/part-r-00000
+
+hdfs namenode
+hdfs datanode
+yarn resourcemanager
+yarn nodemanager
+hadoop jar bigdata.jar
+
+hbase shell
+create 'user', 'basic'
+list 'user'
+put 'user', 'rowkey1', 'basic:name', 'value1'
+scan 'user'
+get 'user', 'rowkey1'
+disable 'user'
+enable 'user'
+drop 'user'
+hbase org.jruby.Main PATH_TO_SCRIPT  //*.rb
+echo "describe 'user'" | ./hbase shell -n  //pass commands to the HBase Shell in non-interactive mode
+echo "describe 'user'" | ./hbase shell -n > /dev/null 2>&1  //To suppress all output
+./hbase shell ./sample_commands.txt

@@ -1,0 +1,17 @@
+keytool -list -v -alias tlink.whrt.gov.cn -storepass bingosoft@2013 -keystore D:\app\Java\jdk1.8.0_151\jre\lib\security\cacerts
+
+keytool -import -noprompt -keystore F:\Link\platform\jre8\lib\security\cacerts -storepass bingosoft@2013 -file F:\Link\system_file\cert\server.cer.txt -alias *.whrt.gov.cn
+
+keytool -list -v -keystore F:\Link\platform\jre8\lib\security\cacerts -storepass bingosoft@2013
+
+keytool -delete -alias eoa.whrt.gov.cn -keystore F:\Link\platform\jre8\lib\security\cacerts -storepass bingosoft@2013
+
+--导入pfx到jks
+keytool -importkeystore -srckeystore whrt.gov.cn.pfx -destkeystore whrt.gov.cn.jks -srcstoretype PKCS12 -deststoretype JKS
+
+
+PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+
+crt转cer命令：
+openssl x509 -in wuhanrt.com.crt -out wuhanrt.com.cer -outform der

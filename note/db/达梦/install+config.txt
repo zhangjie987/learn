@@ -1,0 +1,3 @@
+cat /proc/version #内核版本
+uname -a #内核版本
+cat /etc/*release* #发行版本

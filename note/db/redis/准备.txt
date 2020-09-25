@@ -1,0 +1,18 @@
+$ wget http://download.redis.io/releases/redis-5.0.5.tar.gz
+$ tar xzf redis-5.0.5.tar.gz
+$ cd redis-5.0.5
+$ make
+
+$ find / -name 'redis.conf'
+$ src/redis-server redis.conf
+You can interact with Redis using the built-in client:
+
+$ src/redis-cli
+redis> set foo bar
+OK
+redis> get foo
+"bar"
+
+后台运行：redis.conf > daemonize no 为 yes
+设置密码：redis.conf > requirepass
+关闭redis: redis-cli shutdown

@@ -1,0 +1,27 @@
+编译	javac -d . HelloWorld.java	编译HelloWorld.java文件，按照java文件中首行package生成包文件及class文件
+运行	java test/ant/HelloWorld	执行包test.ant的HelloWorld.class主类的main方法
+反汇编	javap -c test/ant/HelloWorld	-c反汇编
+		-sysinfo显示正在处理的类的系统信息 (路径, 大小, 日期, MD5 散列)
+		ERROR: JDWP Unable to get JNI 1.2 environment, jvm->GetEnv() return code = -2
+		JDWP exit error AGENT_ERROR_NO_JNI_ENV(183):  [util.c:840]
+		java命令：同时包括jar和classpath参数，classpath参数会被忽略
+		java -jar D:\Test\bingo-whrt-test.jar
+		jar包：MANIFEST.MF内容
+		Manifest-Version: 1.0
+		Main-Class: bingo.whrt.test.MyTest
+		Class-Path: jcifs-1.3.17.jar #多个jar包，空格隔开
+		
+		Manifest-Version: 1.0
+		Main-Class: top.iefforts.App
+java命令隐藏窗口
+		start C:\Program" "Files\jre1.8.0_45\bin\javaw -jar monitor.jar
+		空格用引号隔开
+java命令
+		chcp 65001
+		@echo off & setlocal enabledelayedexpansion
+		set LIB_JARS=""
+		cd lib
+		for %%i in (*) do set LIB_JARS=!LIB_JARS!;.\lib\%%i
+		cd ../
+		java -Dfile.encoding=UTF-8 -classpath %LIB_JARS%;.\classes top.iefforts.study.App
+		pause

@@ -1,0 +1,41 @@
+tar zxvf haproxy-1.8.13.tar.gz
+cd haproxy-1.8.13/
+
+tar zxvf haproxy-2.1.4.tar.gz
+cd haproxy-2.1.4/
+
+#这里需要使用uname -r查看系统版本centos6.X需要使用TARGET=linux26  centos7.x使用linux31 
+uname -r   #查询系统内核版本
+3.10.0-862.el7.x86_64
+make TARGET=linux31
+make install PREFIX=/usr/local/haproxy
+mkdir /usr/local/haproxy/conf
+cp examples/option-http_proxy.cfg /usr/local/haproxy/conf/haproxy.cfg
+
+//启停HAProxy
+/usr/local/haproxy/sbin/haproxy -f /usr/local/haproxy/conf/haproxy.cfg
+killall haproxy
+
+echo '/usr/local/haproxy/sbin/haproxy -f /usr/local/haproxy/conf/haproxy.cfg' >> /etc/rc.d/rc.local
+
+//httpd管理
+systemctl disable/enable/start/stop/status httpd
+/usr/sbin/apachectl start
+
+
+//haproxy默认安装
+make TARGET=linux26
+make install
+mkdir -p /var/run/haproxy
+cp examples/haproxy.init /etc/init.d/haproxy
+chmod 755 /etc/init.d/haproxy
+groupadd haproxy
+useradd -s /sbin/nologin haproxy -g haproxy
+mkdir -p /etc/haproxy
+cp -p examples/haproxy.cfg /etc/haproxy/.
+
+
+
+sed -i 's/\/usr\/sbin/\/usr\/local\/sbin/g' /etc/rc.d/init.d/haproxy
+sed -i 's/Listen 80/Listen 8011/' /etc/httpd/conf/httpd.conf
+sed -i '$a /bin/bash /etc/rc.d/init.d/haproxy start' /etc/rc.d/rc.local

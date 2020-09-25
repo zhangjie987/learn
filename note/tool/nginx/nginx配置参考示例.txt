@@ -1,0 +1,43 @@
+# vi /uo1/app/nginx/conf/nginx.conf
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+stream {
+    upstream ps_db_prd {
+        server 192.168.16.100:8000;
+    }
+    upstream ps_db_shh {
+        server 192.168.16.100:22;
+    }
+    upstream ps_web_server {
+        server 192.168.16.82:3389;
+    }
+    upstream ps_web {
+        server 192.168.16.82:80;
+    }
+    server {
+        listen 1522;
+        proxy_pass ps_db_prd;
+    }
+    server {
+        listen 222;
+        proxy_pass ps_db_shh;
+    }
+    server {
+        listen 3390;
+        proxy_pass ps_web_server;
+    }
+    server {
+        listen 8000;
+        proxy_pass ps_web;
+    }
+}

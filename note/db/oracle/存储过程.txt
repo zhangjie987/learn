@@ -1,0 +1,95 @@
+﻿CREATE or REPLACE procedure P_PreOpInspect_TDView
+(
+P_LineID varchar2,--无长度声明
+P_CheckDate DATE,
+P_PostCode VARCHAR2,
+P_Result OUT SYS_REFCURSOR--输出参数
+)
+IS
+p_count INT;
+P_LineName NVARCHAR2(100);
+BEGIN
+  SELECT  LineName into P_LineName FROM BD_Line WHERE LineID = P_LineID;
+  SELECT  COUNT(1) into p_count FROM PO_PreOpInspectRecord WHERE InspectDate = P_CheckDate AND PostCode = P_PostCode AND LineID = P_LineID AND RecordStatus = 2;
+  IF (p_count > 0 and P_PostCode IN ('Station','Depot')) then
+    open P_Result for SELECT 
+      P_LineName AS LineName,
+      nvl(p.RecordNote,p.PointName) PointName,
+      ri.InspectItemText,
+      ri.InspectItemID,
+      pir.InspectResult,
+      pr.CreateUserName AS InspectUserName,
+      pr.Remark
+    FROM BD_Point p 
+    INNER JOIN 
+    (
+        SELECT 
+          pri.InspectItemID,
+          pri.InspectItemText,
+          pri.PostCode,
+          pri.SortOrder
+        FROM PO_PreOpInspectRecord pr 
+        INNER JOIN PO_PreOpInspectItemResult pir ON pr.InspectRecordID = pir.InspectRecordID AND pr.InspectDate = P_CheckDate AND pr.PostCode = P_PostCode AND pr.LineID = P_LineID
+        INNER JOIN PO_PreOpRoleInspect pri ON pir.InspectItemID = pri.InspectItemID
+        WHERE pr.RecordStatus = 2
+        GROUP BY pri.InspectItemID,pri.InspectItemText,pri.PostCode,pri.SortOrder
+    ) ri ON p.PointTypeCode = ri.PostCode
+    LEFT JOIN PO_PreOpInspectRecord pr ON p.PointID = pr.PointID AND pr.InspectDate = P_CheckDate AND pr.RecordStatus = 2
+    LEFT JOIN PO_PreOpInspectItemResult pir ON pr.InspectRecordID = pir.InspectRecordID AND pir.InspectItemID = ri.InspectItemID
+    WHERE p.LineID = P_LineID
+    AND p.PointTypeCode = P_PostCode
+    AND p.RecordStatus = 1
+    ORDER BY p.SortOrder,ri.SortOrder;
+  ELSIF p_count = 0 and P_PostCode IN ('Station','Depot') THEN
+    open P_Result for SELECT 
+      P_LineName AS LineName,
+      nvl(p.RecordNote,p.PointName) PointName,
+      ri.InspectItemText,
+      ri.InspectItemID,
+      pir.InspectResult,
+      pr.CreateUserName AS InspectUserName,
+      pr.Remark
+    FROM BD_Point p 
+    INNER JOIN 
+    (
+        SELECT
+          InspectItemID,
+          InspectItemText,
+          PostCode,
+          SortOrder
+        FROM PO_PreOpRoleInspect 
+        WHERE PostCode = P_PostCode AND RecordStatus = 1
+    ) ri ON p.PointTypeCode = ri.PostCode
+    LEFT JOIN PO_PreOpInspectRecord pr ON p.PointID = pr.PointID AND pr.InspectDate = P_CheckDate AND pr.RecordStatus = 2
+    LEFT JOIN PO_PreOpInspectItemResult pir ON pr.InspectRecordID = pir.InspectRecordID AND pir.InspectItemID = ri.InspectItemID
+    WHERE p.LineID = P_LineID
+    AND p.PointTypeCode = P_PostCode
+    AND p.RecordStatus = 2
+    ORDER BY p.SortOrder,ri.SortOrder;
+  ELSIF p_count = 0 and P_PostCode NOT IN ('Station','Depot') THEN
+    open P_Result for 
+    SELECT 
+      P_LineName AS LineName,
+      ri.InspectItemText,
+      ri.InspectItemID,
+      pir.InspectResult,
+      pr.CreateUserName AS InspectUserName,
+      pr.Remark,
+      pr.OperateSchedule,
+      (SELECT MAX(SubmitTime) FROM PO_PreOpInspectRecord WHERE InspectDate = P_CheckDate AND pr.LineID = P_LineID AND pr.RecordStatus = 2) AS SubmitTime
+    FROM (
+        SELECT
+          InspectItemID,
+          InspectItemText,
+          PostCode,
+          SortOrder
+        FROM PO_PreOpRoleInspect 
+        WHERE PostCode = P_PostCode AND RecordStatus = 1
+    ) ri
+    LEFT JOIN PO_PreOpInspectRecord pr ON ri.PostCode = pr.PostCode AND pr.InspectDate = P_CheckDate AND pr.LineID = P_LineID AND pr.RecordStatus = 2
+    LEFT JOIN PO_PreOpInspectItemResult pir ON pr.InspectRecordID = pir.InspectRecordID AND pir.InspectItemID = ri.InspectItemID
+    WHERE ri.PostCode = P_PostCode
+    ORDER BY ri.SortOrder;
+  END IF;
+END P_PreOpInspect_TDView;
+/

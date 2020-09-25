@@ -1,0 +1,4 @@
+#/etc/yum.repos.d/
+
+#yum clean all（清除资源）
+#yum makecache（建立yum资源缓存）

@@ -1,0 +1,29 @@
+# 存储结构
+表空间(.ibd文件)(数据、索引、插入缓冲)
+表空间(mysql.ibd属于多表共享表空间)
+innodb系统表空间文件(ibdata1)(撤销(Undo)信息、系统事务信息、 二次写缓冲(double write buffer)等)
+ib_logfile0/ib_logfile1(事务日志、redo日志)
+undo_001/002(回滚日志)
+表空间、段、区(物理上连续页)、页(4k/8k/16k)
+
+# 内存结构
+
+热点数据页、索引、buffer pool、doublewrite buffer
+
+# ACID
+
+原子性
+
+一致性：事务
+
+隔离性：锁
+
+持久性
+
+# 优化
+
+原理：从磁盘加载数据页到内存页、更新内存数据页（磁盘页与内存页数据不同，称内存页为脏数据页）、写数据到重做日志（redo，undo）、同步日志到磁盘、提交事务、定期刷新脏页到磁盘（连续页合并一次IO写入磁盘）、更新检查点
+
+InsertBuffer：插入带非唯一非聚集索引列的表，先将索引列写入缓冲区，定期刷新缓冲区到B+树索引树
+
+DoubleWrite：innodb buffer pool脏页写入磁盘前，copy脏页到doublewrite buffer，分两次写入doublewrite buffer到共享表空间（连续的128页，**顺序写**），再将脏页写入表空间（**离散写**），脏页数据固化后，标记对一个doublewrite数据可覆盖

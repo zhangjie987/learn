@@ -1,0 +1,77 @@
+【示例】
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+
+        #access_log  logs/host.access.log  main;
+        location /hjsds/ {
+            #root html;
+            alias /opt/nginx/html/;
+            index index.html;
+        }
+        location /hjsds-wx/ {
+            #root html;
+            alias /opt/nginx/html-wx/;
+            index index.html;
+        }
+        location /vupload/ {
+            client_max_body_size 1024m;
+            proxy_pass http://10.201.62.41:5080/api/;
+        }
+        location /video/ {
+            proxy_pass http://10.201.62.41/;
+        }
+        location / {
+            proxy_pass http://10.6.123.107:8080/;
+        }
+
+
+【location路径匹配规则】
+# 1、location匹配路径末尾没有 /
+
+location /sta
+{
+proxy_pass http://192.168.1.1/sta;
+}
+外面访问：http://外网IP/sta/sta1.html
+相当于访问：http://192.168.1.1/sta/sta1.html
+
+
+# 2、location匹配路径末尾有 /
+
+# 2.1、proxy_pass后面的路径只有域名且最后没有 /
+location /sta/
+{
+proxy_pass http://192.168.1.1;
+}
+外面访问：http://外网IP/sta/sta1.html
+相当于访问：http://192.168.1.1/sta/sta1.html
+
+
+# 2.2、proxy_pass后面的路径只有域名同时最后有 /
+location /sta/
+{
+proxy_pass http://192.168.1.1/;
+}
+外面访问：http://外网IP/sta/sta1.html
+相当于访问：http://192.168.1.1/sta1.html
+
+
+# 2.3、proxy_pass后面的路径还有其他路径但是最后没有 /
+
+location /sta/
+{
+proxy_pass http://192.168.1.1/abc;
+}
+外面访问：http://外网IP/sta/sta1.html
+相当于访问：http://192.168.1.1/abcsta1.html
+
+
+# 2.4、proxy_pass后面的路径还有其他路径同时最后有 /
+location /sta/
+{
+proxy_pass http://192.168.1.1/abc/;
+}
+外面访问：http://外网IP/sta/sta1.html
+相当于访问：http://192.168.1.1/abc/sta1.html

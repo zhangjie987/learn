@@ -1,0 +1,15 @@
+//脱机备份
+.\DMBACKUP TYPE=FULL INI_PATH=E:\app\dmdbms\data\DAMENG\dm.ini NAME=[mydb20200617]
+.\DMRESTORE INI_PATH=E:\app\dmdbms\data\DAMENG\dm.ini FILE=E:\app\dmdbms\data\DAMENG\bak\DB_DAMENG_20200617**.bak
+
+//联机备份
+//启动DmAPService服务
+//dm.ini>ARCH_INI=1
+//dmarch.ini>
+	[ARCHIVE_LOCAL]
+	ARCH_TYPE = LOCAL
+	ARCH_DEST = e:\app\dmdbms\data\DAMENG\arch
+	ARCH_FILE_SIZE = 1024
+	ARCH_SPACE_LIMIT = 2048
+conn sysdba/"pass@word1"@127.0.0.1
+BACKUP DATABASE FULL BACKUPSET 'E:\app\dmdbms\data\DAMENG\bak\20200617'

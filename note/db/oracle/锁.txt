@@ -1,0 +1,6 @@
+--CONS/SYSTEM/wenbo2019/
+--PS/SYSTEM/Solar100
+select * from v$session t1, v$locked_object t2 where t1.sid = t2.SESSION_ID; 
+
+--session:SID,SERIAL#
+alter system kill session '1454,58323'; 

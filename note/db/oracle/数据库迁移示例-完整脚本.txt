@@ -1,0 +1,45 @@
+sys/Abcd12345@192.168.18.45:1521/orcl as sysdba
+
+CREATE TABLESPACE HEFEI_CONS DATAFILE '/u01/app/oradata/cons/datafile/HEFEI_CONS.dbf' SIZE 6120M
+    DEFAULT STORAGE (
+    INITIAL 64K 
+    NEXT 1M 
+    MAXSIZE unlimited 
+    PCTINCREASE 0);
+alter tablespace HEFEI_CONS add datafile '/u01/app/oradata/cons/datafile/HEFEI_CONS2.dbf' SIZE 6120M;
+create directory consbackup as '/u01/app/oradata/cons/consbackup/';
+CREATE USER HEFEI_CONS IDENTIFIED BY bingopassword DEFAULT TABLESPACE HEFEI_CONS TEMPORARY TABLESPACE temp PROFILE default;
+GRANT READ,WRITE ON DIRECTORY consbackup to HEFEI_CONS;
+grant create any context,create database link,create synonym, create session,create table,create view,create sequence,unlimited tablespace to HEFEI_CONS;
+grant connect,resource to HEFEI_CONS;
+
+关注参数：ORACLE_SID与TNS_ADMIN
+TNS_ADMIN=/u01/app/product/12.2.0/dbhome_1/network/admin
+export TNS_ADMIN
+
+scp /u01/app/oracle/oradata/CONS/datafile/cons20190330.DMP oracle@192.168.18.45:/u01/app/oradata/cons/consbackup
+scp /u01/app/oracle/product/12.2.0.1/dbhome_1/network/admin/tnsnames.ora oracle@192.168.18.45:/u01/app/product/12.2.0/dbhome_1/network/admin
+
+impdp HEFEI_CONS/bingopassword@orcl DIRECTORY=consbackup DUMPFILE=cons20190330.DMP
+impdp HEFEI_CONS/bingopassword@192.168.18.45/orcl DIRECTORY=consbackup DUMPFILE=cons20190330.DMP
+	
+select
+b.file_name 物理文件名,
+b.tablespace_name 表空间,
+b.bytes/1024/1024 大小M,
+(b.bytes-sum(nvl(a.bytes,0)))/1024/1024 已使用M,
+substr((b.bytes-sum(nvl(a.bytes,0)))/(b.bytes)*100,1,5) 利用率
+from dba_free_space a,dba_data_files b
+where a.file_id=b.file_id
+group by b.tablespace_name,b.file_name,b.bytes
+order by b.tablespace_name
+
+
+#!/bin/bash
+export ORACLE_HOME=/u01/app/product/12.2.0/dbhome_1
+export ORACLE_SID=cnos
+export PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/sbin:/usr/sbin:/u01/app/product/12.2.0/dbhome_1/bin
+currentTime=`date +%Y%m%d%H%M`
+/usr/bin/find /u01/app/oradata/cons/consbackup -mtime +30 -name  "*.dmp" -exec rm -rf {} \;
+/usr/bin/find /u01/app/oradata/cons/consbackup -mtime +30 -name  "*.log" -exec rm -rf {} \;
+/u01/app/product/12.2.0/dbhome_1/bin/expdp HEFEI_CONS/bingopassword@192.168.18.45/orcl schemas=HEFEI_CONS directory=consbackup parallel=6 dumpfile=CONS${currentTime}.DMP logfile=CONS${currentTime}.log > /u01/app/oradata/cons/consbackup/dmp.log 2>&1 

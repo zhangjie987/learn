@@ -1,0 +1,12 @@
+wget http://nginx.org/download/nginx-1.17.9.tar.gz
+tar -zxvf nginx-1.17.9.tar.gz
+cd nginx-1.17.9
+yum install gcc
+yum install gcc-c++
+yum install pcre pcre-devel -y
+yum install zlib zlib-devel -y
+./configure --prefix=/opt/nginx
+make && make install
+
+./nginx -s reload
+./nginx -s stop

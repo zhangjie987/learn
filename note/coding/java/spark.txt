@@ -1,0 +1,27 @@
+./build/mvn -Pyarn -Phadoop-2.8 -Dhadoop.version=2.8.1 -DskipTests clean package
+
+
+F:\usr\project\spark-2.2.0\bin>spark-shell
+java -cp "F:\usr\project\spark-2.2.0\bin\..\conf\;F:\usr\project\spark-2.2.0\bin\..\assembly\target\scala-2.11\jars\*" "-Dscala.usejavacp=true" -Xmx1g org.apache.spark.deploy.SparkSubmit --class org.apache.spark.repl.Main --name "Spark shell" spark-shell
+
+退出SparkShell::quit
+
+scala> var lines=sc.textFile("../README.md")
+scala> lines.count()
+scala> lines.first()
+scala> lines.flatMap(_.split(" ")).map((_,1)).reduceByKey(_+_).collect()
+scala> lines.flatMap(_.split(" ")).map((_,1)).reduceByKey(_+_).sortBy(_._2,false).saveAsTextFile("../result")//保存结果到result目录
+
+java -cp "F:\usr\project\spark-2.2.0\bin\..\conf\;F:\usr\project\spark-2.2.0\bin\..\assembly\target\scala-2.11\jars\*" -Xmx1g org.apache.spark.deploy.SparkSubmit --jars "F:\usr\project\spark-2.2.0\bin\..\examples\target\scala-2.11\jars\scopt_2.11-3.3.0.jar,F:\usr\project\spark-2.2.0\bin\..\examples\target\scala-2.11\jars\spark-examples_2.11-2.2.0.jar" --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster --executor-memory 512m --executor-cores 1 spark-internal
+
+
+java -cp "F:\usr\project\spark-2.2.0\bin\..\conf\;F:\usr\project\spark-2.2.0\bin\..\assembly\target\scala-2.11\jars\*" -Xmx1g org.apache.spark.deploy.SparkSubmit --jars "local:///F:/usr/project/spark-2.2.0/examples/target/scala-2.11/jars/scopt_2.11-3.3.0.jar,local:///F:/usr/project/spark-2.2.0/examples/target/scala-2.11/jars/spark-examples_2.11-2.2.0.jar" --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster --executor-memory 512m --executor-cores 1 spark-internal
+
+diagnostics: Application  failed 2 times due to AM Container for  exited with  exitCode: -1000
+
+
+HADOOP_CONF_DIR		F:\cygwin64\app\hadoop-2.8.1\etc\hadoop
+HADOOP_HOME			F:\cygwin64\app\hadoop-2.8.1
+
+SPARK_HOME			F:\usr\project\spark-2.2.0
+SPARK_LOCAL_DIRS	F:\usr\project\spark-2.2.0\bin\temp

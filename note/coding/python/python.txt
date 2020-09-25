@@ -1,0 +1,7 @@
+#启动一个HTTPServer
+F:
+cd F:\BSPRJ\WX\ThreeJSDemo
+python -m http.server 8088
+
+--Upgrade pip
+python -m pip install --upgrade pip

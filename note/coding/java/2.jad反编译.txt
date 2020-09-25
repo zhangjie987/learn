@@ -1,0 +1,7 @@
+jad:
+反编译：
+jad [option(s)] <filename(s)>
+-o  overwrite output files without confirmation
+-r  restore package directory structure
+-s <ext> - output file extension (default: .jad)
+D:\app\eclipse-jee\jad.exe -o -r -sjava -d[directory for output files] [packagename]/**/*.class

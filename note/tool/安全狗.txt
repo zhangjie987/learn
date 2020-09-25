@@ -1,0 +1,25 @@
+wget http://download.safedog.cn/safedog_linux64.tar.gz
+tar xzvf safedog_linux64.tar.gz
+ls
+safedog_linux64 safedog_linux64.tar.gz
+cd safedog_linux64
+chmod +x *.py
+./install.py
+
+
+关闭SeLinux
+setenforce 0  不需要重启Linux
+vi /etc/selinux/config
+配置：从SELINUX enforcing到SELINUX disabled  需要重启Linux
+
+
+
+在客户端进行命令行方式：输入命令 sdcloud –u 用户名
+
+客户端加入服云后，可进行命令行功能操作
+service safedog status 查看安全狗服务
+service safedog start 启动安全狗服务
+service safedog stop 停止安全狗服务
+sdstart 重启安全狗服务
+
+安全狗服云：19945006584/zjsafedog_2157

@@ -1,0 +1,4 @@
+cd /etc/systemd/system
+vi tomcat.service
+systemctl start|stop|status tomcat.service
+systemctl daemon-reload

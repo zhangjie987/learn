@@ -1,0 +1,23 @@
+参考URL：
+http://www.cnblogs.com/mrhgw/p/3514855.html
+
+在最后建立数据库镜像的时候，先在镜像机器建立PARTNER，然后在主机建立PARTNER
+
+--授权数据库权限给自定义用户，需确保镜像服务器与主服务器的login的sid一致
+--查询主库login的MTROPODRProdUser的sid
+use master;
+select * from syslogins where name='MTROPODRProdUser';
+
+--在镜像数据库创建通主库sid相同的login
+exec sp_addlogin
+@loginame = 'MTRTBMProdUser', 
+@passwd = 'HfPass@word1', 
+@sid = 0x57490B23101FBC4487C0D2CF6E7C4A20;
+
+https://www.cnblogs.com/stragon/p/5643754.html
+
+--取消镜像
+ALTER DATABASE [HFMTRCMProd] SET PARTNER OFF;
+
+--取消镜像后，镜像数据库显示“正在还原中”，如下SQL将数据库恢复为正常
+RESTORE DATABASE [HFMTR_TBM] WITH RECOVERY;

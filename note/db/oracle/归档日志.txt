@@ -1,0 +1,12 @@
+--归档日志
+--***************************************https://blog.csdn.net/weixin_29718469/article/details/84333714
+
+SQL> select name,sequence#,first_change# from v$archived_log; --归档日志位置：+FRA/CNOS/ARCHIVELOG/
+SQL> select * from v$flash_recovery_area_usage; --查询各对象空间使用率大小（含归档日志）
+SQL> show parameter db_recovery; --查看归档日志文件存储路径
+SQL> alter system set db_recovery_file_dest_size=200G;
+$> rman target sys/wenbo2019@cnos
+RMAN> crosscheck archivelog all; --校验归档文件的有效性
+RMAN> delete expired archivelog all; --删除无效的归档文件记录
+RMAN> delete archivelog until time 'sysdate'; --删除所有日志
+RMAN> delete noprompt archivelog all completed before 'sysdate - 7';

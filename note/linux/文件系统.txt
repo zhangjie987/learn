@@ -1,0 +1,5 @@
+find . -type f -size +800M #查找大文件
+
+find / -name '202003' -type d #查找目录“202003”
+
+rm -rf xxx/

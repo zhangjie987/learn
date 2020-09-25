@@ -1,0 +1,13 @@
+shell中各种括号的作用()、(())、[]、[[]]、{}
+	https://blog.csdn.net/taiyang1987912/article/details/39551385
+
+$(( ))：用来作整数运算
+$( ) 与 ` ` (反引号)：用来做命令替换(command substitution)
+	echo today is $(date) #输出日期
+${ }：用作变量替换
+
+if [[ 1==1 ]];then echo 1;else echo 2;fi
+while [[ 1==1 ]]
+do
+	echo $(date)
+done

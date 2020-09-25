@@ -1,0 +1,166 @@
+JVM+Spring+Dubbo+Redis+并发编程
+
+1.Redis 面试题
+
+1、什么是 Redis?
+	支持网络、可基于内存亦可持久化的高性能的键值数据库
+2、Redis 的数据类型？
+	Redis支持五种数据类型：string（字符串）
+	hash（string 类型的 field 和 value 的映射表，hash 特别适合用于存储对象）
+	list（简单的字符串列表，按照插入顺序排序，允许重复成员）
+	set（string 类型的无序集合，不允许重复的成员）
+	zset(sorted set：有序集合)
+3、使用 Redis 有哪些好处？
+	速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)
+	支持丰富数据类型，支持string，list，set，sorted set，hash
+	支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行
+	丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除
+4、Redis 相比 Memcached 有哪些优势？
+	memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型
+	redis的速度比memcached快很多
+	redis可以持久化其数据
+5、Memcache 与 Redis 的区别都有哪些？
+	1)、存储方式
+		Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。
+		Redis有部份存在硬盘上，这样能保证数据的持久性。
+	2)、数据支持类型
+		Memcache对数据类型支持相对简单。
+		Redis有复杂的数据类型。
+	3)、value大小
+		redis最大可以达到1GB，而memcache只有1MB
+6、Redis 是单进程单线程的？
+7、一个字符串类型的值能存储最大容量是多少？1G
+8、Redis 的持久化机制是什么？各自的优缺点？
+9、Redis 常见性能问题和解决方案：
+	(1) Master最好不要做任何持久化工作，如RDB内存快照和AOF日志文件
+	(2) 如果数据比较重要，某个Slave开启AOF备份数据，策略设置为每秒同步一次
+	(3) 为了主从复制的速度和连接的稳定性，Master和Slave最好在同一个局域网内
+	(4) 尽量避免在压力很大的主库上增加从库
+	(5) 主从复制不要用图状结构，用单向链表结构更为稳定，即：Master <- Slave1 <- Slave2 <- Slave3…
+	这样的结构方便解决单点故障问题，实现Slave对Master的替换。如果Master挂了，可以立刻启用Slave1做Master，其他不变。
+10、redis 过期键的删除策略？
+	redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 6种数据淘汰策略：
+	voltile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰
+	volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
+	volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰
+	allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰
+	allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
+	no-enviction（驱逐）：禁止驱逐数据
+11、Redis 的回收策略（淘汰策略）?
+12、为什么 Redis 需要把所有数据放到内存中？
+13、Redis 的同步机制了解么？
+14、Pipeline 有什么好处，为什么要用 pipeline？
+15、是否使用过 Redis 集群，集群的原理是什么？
+16、Redis 集群方案什么情况下会导致整个集群不可用？
+17、Redis 支持的 Java 客户端都有哪些？官方推荐用哪个？
+	Redisson,Jedis，lettuce等等，官方推荐使用Redisson
+18、Jedis 与 Redisson 对比有什么优缺点？
+19、Redis 如何设置密码及验证密码？
+20、说说 Redis 哈希槽的概念？
+
+
+
+2.Dubbo 面试题
+
+
+1、Dubbo是什么？
+2、为什么要用Dubbo？
+3、Dubbo 和 Spring Cloud 有什么区别？
+4、dubbo都支持什么协议，推荐用哪种？
+5、Dubbo需要 Web 容器吗？
+6、Dubbo内置了哪几种服务容器？
+7、Dubbo里面有哪几种节点角色？
+8、画一画服务注册与发现的流程图
+9、Dubbo默认使用什么注册中心，还有别的选择吗？
+10、Dubbo有哪几种配置方式？
+11、Dubbo 核心的配置有哪些？
+12、在 Provider 上可以配置的 Consumer 端的属性有哪些？
+13、Dubbo启动时如果依赖的服务不可用会怎样？
+14、Dubbo推荐使用什么序列化框架，你知道的还有哪些？
+15、Dubbo默认使用的是什么通信框架，还有别的选择吗？
+16、Dubbo有哪几种集群容错方案，默认是哪种？
+17、Dubbo有哪几种负载均衡策略，默认是哪种？
+18、注册了多个同一样的服务，如果测试指定的某一个服务呢？
+19、Dubbo支持服务多协议吗？
+20、当一个服务接口有多种实现时怎么做？
+
+
+
+
+3.Spring Boot 面试题
+
+1、什么是 Spring Boot？
+2、Spring Boot 有哪些优点？
+3、什么是 JavaConfig？
+4、如何重新加载 Spring Boot 上的更改，而无需重新启动服务器？
+5、Spring Boot 中的监视器是什么？
+6、如何在 Spring Boot 中禁用 Actuator 端点安全性？
+7、如何在自定义端口上运行 Spring Boot 应用程序？
+8、什么是 YAML？
+9、如何实现 Spring Boot 应用程序的安全性？
+10、如何集成 Spring Boot 和 ActiveMQ？
+11、如何使用 Spring Boot 实现分页和排序？
+12、什么是 Swagger？你用 Spring Boot 实现了它吗？
+13、什么是 Spring Profiles？
+14、什么是 Spring Batch？
+15、什么是 FreeMarker 模板？
+16、如何使用 Spring Boot 实现异常处理？
+17、您使用了哪些 starter maven 依赖项？
+18、什么是 CSRF 攻击？
+19、什么是 WebSockets？
+20、什么是 AOP？
+21、什么是 Apache Kafka？
+22、我们如何监视所有 Spring Boot 微服务？
+
+4.Spring Cloud 面试题
+
+1、什么是Spring Cloud？
+2、使用Spring Cloud有什么优势？
+3、服务注册和发现是什么意思？Spring Cloud如何实现？
+4、负载平衡的意义什么？
+5、什么是Hystrix？它如何实现容错？
+6、什么是Hystrix断路器？我们需要它吗？
+7、什么是Netflix Feign？它的优点是什么？
+8、什么是Spring Cloud Bus？我们需要它吗？
+
+5.JVM面试题
+
+1、JVM三大性能调优参数，JVM 几个重要的参数
+2、JVM调优
+3、JVM内存管理，JVM的常见的垃圾收集器，Ｇ１垃圾收集器。GC调优，Minor GC ，Full GC 触发条件
+4、java内存模型
+5、Java垃圾回收机制
+6、jvm怎样 判断一个对象是否可回收，怎样的对象才能作为GC root
+7、OOM说一下？怎么排查？哪些会导致OOM? OOM出现在什么时候
+8、什么是Full GC？GC? major GC? stop the world
+9、描述JVM中一次full gc过程。
+10、JVM中类加载机制，类加载过程，什么是双亲委派模型？，类加载器有哪些
+11、如何判断是否有内存泄露？定位 Full GC 发生的原因，有哪些方式？
+12、Java 中都有哪些引用类型？
+
+
+
+6.Java 并发编程
+
+1、在 java 中守护线程和本地线程区别？
+2、线程与进程的区别？
+3、什么是多线程中的上下文切换？
+4、死锁与活锁的区别，死锁与饥饿的区别？
+5、Java 中用到的线程调度算法是什么？
+6、什么是线程组，为什么在 Java 中不推荐使用？
+7、为什么使用 Executor 框架？
+8、在 Java 中 Executor 和 Executors 的区别？
+	Executor是Java线程池的顶级接口
+	Executors类提供了若干个静态方法，用于生成不同类型的线程池
+9、如何在 Windows 和 Linux 上查找哪个线程使用的 CPU 时间最长？
+10、什么是原子操作？在 Java Concurrency API 中有哪些原子类(atomic classes)？
+11、Java Concurrency API 中的 Lock 接口(Lock interface)是什么？对比同步它有什么优势？
+12、什么是 Executors 框架？
+13、什么是阻塞队列？阻塞队列的实现原理是什么？如何使用阻塞队列来实现生产者-消费者模型？
+14、什么是 Callable 和 Future?
+15、什么是 FutureTask?使用 ExecutorService 启动任务。
+16、什么是并发容器的实现？
+17、多线程同步和互斥有几种实现方法，都是什么？
+18、什么是竞争条件？你怎样发现和解决竞争？
+19、你将如何使用 thread dump？你将如何分析 Thread dump？165
+20、为什么我们调用 start()方法时会执行 run()方法，为什么我们不能直接调用 run()方法？

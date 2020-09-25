@@ -1,0 +1,21 @@
+1：
+启动JMX，在catalina.bat首行增加如下配置参数：
+set "JAVA_OPTS=%JAVA_OPTS% -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+在jconsole中通过localhost:9999进行远程管理
+
+2：
+禁用掉不安全的HTTP方法 web.xml:
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/*</url-pattern>
+			<http-method>HEAD</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>TRACE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+		</auth-constraint>
+	</security-constraint>
+
+3：
+catalina.bat
+set JAVA_OPTS=%JAVA_OPTS% -server -Xms5120m -Xmx10240m -XX:PermSize=640M -XX:MaxPermSize=2560m

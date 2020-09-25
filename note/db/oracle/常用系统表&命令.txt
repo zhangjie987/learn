@@ -1,0 +1,41 @@
+show parameter spfile;
+show parameter pfile;
+
+--所有控制文件、数据文件、重做日志文件、临时文件
+select name from v$controlfile union all
+select name from v$datafile union all
+select member from v$logfile union all
+select name from v$tempfile;
+--查看spfile文件
+SELECT NAME,VALUE,DISPLAY_VALUE FROM V$PARAMETER WHERE NAME ='spfile';
+
+--查看ASM共享存储
+select group_number,name,total_mb,free_mb from v$asm_diskgroup;
+
+select * from all_tables;
+select * from all_users;
+select * from user_sys_privs;
+select * from user_tab_privs;
+select * from all_tab_privs;
+
+select distinct tablespace_name from all_tables;
+
+select c.TABLE_NAME 表名,tm.COMMENTS 表中文名,c.COLUMN_NAME 列名,cm.COMMENTS 列中文名,
+c.DATA_TYPE 类型,c.DATA_LENGTH 长度,c.NULLABLE 是否为空
+from user_tab_cols c
+left join user_col_comments cm on c.TABLE_NAME=cm.TABLE_NAME and c.COLUMN_NAME=cm.COLUMN_NAME
+left join user_tab_comments tm on tm.TABLE_NAME=c.TABLE_NAME
+order by c.TABLE_NAME,c.COLUMN_ID
+
+select * from user_tab_cols;
+select * from user_tab_comments
+select * from user_col_comments
+select * from user_tables
+
+
+--查看表空间使用情况：
+SELECT total.tablespace_name,Round(total.MB, 2) AS Total_MB,Round(total.MB - free.MB, 2) AS Used_MB,
+       Round(( 1 - free.MB / total.MB ) * 100, 2) || '%' AS Used_Pct
+FROM   (SELECT tablespace_name,Sum(bytes) / 1024 / 1024 AS MB FROM   dba_free_space GROUP  BY tablespace_name) free,
+       (SELECT tablespace_name,Sum(bytes) / 1024 / 1024 AS MB FROM   dba_data_files GROUP  BY tablespace_name) total
+WHERE  free.tablespace_name = total.tablespace_name;

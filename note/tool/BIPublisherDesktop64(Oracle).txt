@@ -1,0 +1,12 @@
+Office Word 2016 64位
+BI Publisher Desktop 64位
+
+打开注册表
+\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\Word\Addins位置上添加TBAddin64文件夹
+字符串：Description		BI Publisher Template Builder for Word 64bit
+字符串：FriendlyName	BI Publisher Template Builder for Word 64bit
+DWORD：LoadBehavior	3
+字符串：Manifest		C:\Program Files\Oracle\BI Publisher\BI Publisher Desktop\DotNet2007\TBAddIn.vsto|vstolocal
+
+DotNet2007这个文件默认是安装到Program Files(x64)目录中
+该文件夹需要在Program Files即非32位的路径中自行添加

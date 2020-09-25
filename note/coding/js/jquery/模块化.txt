@@ -1,0 +1,29 @@
+//模块化
+//AMD 即Asynchronous Module Definition 中文名是“异步模块定义”的意思。它是一个在浏览器端模块化开发的规范
+//CommonJS 服务器端的规范是
+
+//require全局配置
+require.config({
+    baseUrl: 'lib',
+    paths: {
+      'compute': 'compute/main' //模块compute的位置定义lib/compute/main.js
+    }
+});
+
+//加载模块
+$(function () {
+    require(['/Scripts/module/report.js'], function (report) {
+        report.init();
+        report.render();
+    });
+});
+
+//定义模块
+define(["my/cart", "my/inventory"], function(cart, inventory) {
+    var init = function () { };
+    var render = function () { };
+    return {
+        init: init,
+        render: render
+    };
+});

@@ -1,0 +1,30 @@
+ERLANG_HOME		D:\Program\erl10.4
+
+D:
+cd D:\app\rabbitmq_server-3.7.15\sbin
+	rabbitmq-service.bat install
+	rabbitmq-service.bat start
+	rabbitmq-service.bat stop
+	RABBITMQ_SERVER 		D:\app\rabbitmq_server-3.7.15
+	RABBITMQ_BASE 			D:\app\rabbitmq_server-3.7.15
+	RABBITMQ_MNESIA_BASE	%RABBITMQ_BASE%\db
+	RABBITMQ_LOG_BASE		%RABBITMQ_BASE%\log
+	RABBITMQ_CONFIG_FILE	%RABBITMQ_BASE%\etc\rabbitmq
+	环境变量调整，服务卸载重装后生效
+
+CLI管理本地RabbitMQ服务：https://www.rabbitmq.com/cli.html#erlang-cookie
+	需%HOMEDRIVE%%HOMEPATH%\.erlang.cookie与C:\WINDOWS\system32\config\systemprofile\.erlang.cookie一致
+CLI管理Rabbit node命令：
+	https://www.rabbitmq.com/rabbitmqctl.8.html
+	rabbitmqctl add_user hfadmin HfPass$word2
+	rabbitmqctl add_user mqadmin cdmtr$Bingo2019
+	rabbitmqctl set_user_tags hfadmin administrator
+	rabbitmqctl delete_user guest
+	rabbitmqctl set permissions -p / mqadmin .* .* .*
+	>>Setting permissions for user "mqadmin" in vhost "/" ...
+
+Web管理控制台
+	http://localhost:15672/  guest/guest
+	rabbitmq-plugins.bat enable rabbitmq_management
+	控制台端口调整：搜索rabbitmq.config，调整rabbitmq_management监听端口
+	首次install服务，如未设置rabbitmq.config，增加配置文件后，需要卸载服务重新安装

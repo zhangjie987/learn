@@ -1,0 +1,60 @@
+#依赖包安装
+yum -y install openssl openssl-devel
+yum -y install pcre-devel
+yum -y install gcc-c++
+yum -y install psmisc  #killall命令
+
+#nginx安装
+http://tengine.taobao.org/download/tengine-2.3.2.tar.gz
+tar -zxvf tengine-2.3.2.tar.gz
+cd tengine-2.3.2
+./configure --prefix=/home/app/tengine
+make && make install
+
+#nginx配置启动及查看
+cd /home/app/tengine
+vi ./conf/nginx.conf
+./sbin/nginx -t
+./sbin/nginx
+vi /home/app/tengine/conf/nginx.conf
+/home/app/tengine/sbin/nginx
+/home/app/tengine/sbin/nginx -s stop
+ps -ef | grep nginx
+
+#安装keepalived
+tar -zxvf keepalived-2.0.19.tar.gz
+cd keepalived-2.0.19
+./configure --prefix=/home/app/keepalived
+make && make install
+
+#配置keepalived
+cd /home/app/keepalived/etc
+mkdir /etc/keepalived
+cp ./keepalived/keepalived.conf /etc/keepalived/keepalived.conf
+cp ./sysconfig/keepalived /etc/sysconfig/keepalived
+chkconfig keepalived on
+vi /etc/keepalived/keepalived.conf #关闭注释vrrp_strict
+
+ip addr
+chmod +x /etc/keepalived/nginx_check.sh
+
+service keepalived stop
+service keepalived start
+ps -ef | grep keepalived
+
+keepalived-track_script未生效分析过程：
+打开日志观察: tail -f /var/log/messages
+重启keepalived
+
+#nginx检查shell
+vi /etc/keepalived/nginx_check.sh
+nginx_check.sh:
+#!/bin/bash
+A=`ps -C nginx --no-header | wc -l`
+if [ $A -eq 0 ];then
+    /home/app/tengine/sbin/nginx -c /home/app/tengine/conf/nginx.conf
+    sleep 2
+    if [ `ps -C nginx --no-header | wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi

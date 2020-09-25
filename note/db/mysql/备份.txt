@@ -1,0 +1,13 @@
+set "mydate=%date:~,4%%date:~5,2%%date:~8,2%%time:~,2%%time:~3,2%"
+cd "D:\LinkDB\platform\mysql\bin"
+D:
+mysqldump --opt -u root --password="Link$2013" --triggers --routines link > "F:\LinkDBBackup\link\link_%mydate%.sql"
+
+set SrcDir=F:\LinkDBBackup\link
+set DaysAgo=5
+forfiles /p %SrcDir% /s /m *.* /d -%DaysAgo% /c "cmd /c del /f /q /a @path"
+
+
+
+-- 备份内容忽略部分表数据
+mysqldump -uroot -p123456 -t --ignore-table=database.table1 --ignore-table=database.table2 >> database.sql

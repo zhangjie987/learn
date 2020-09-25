@@ -1,0 +1,42 @@
+# 查看haproxy进程信息（可判断是否已启动）
+ps -eo pid,tty,user,comm,lstart,etime | grep haproxy
+# 停止
+killall haproxy
+# 启动
+/home/LinkSoft/haproxy-1.5.12/sbin/haproxy -f /home/LinkSoft/haproxy-1.5.12/conf/haproxy.cfg
+
+
+1. 创建记录日志文件
+	mkdir /var/log/haproxy
+	chmod a+w /var/log/haproxy
+
+2. 开启rsyslog记录haproxy日志功能
+	编辑“/etc/rsyslog.conf”打开如下配置项：
+
+	# Provides UDP syslog reception
+	$ModLoad imudp
+	$UDPServerRun 514
+	添加如下内容：
+
+	# Save haproxy log
+	local0.*                       /var/log/haproxy/haproxy.log
+3. 修改“/etc/sysconfig/rsyslog”文件，内容如下
+
+	# Options for rsyslogd
+	# Syslogd options are deprecated since rsyslog v3.
+	# If you want to use them, switch to compatibility mode 2 by "-c 2"
+	# See rsyslogd(8) for more details
+	SYSLOGD_OPTIONS="-r -m 0 -c 2"
+4. 配置haproxy
+
+	编辑haproxy配置文件，进行如下内容修改
+
+	log 127.0.0.1 local0 info
+5. 验证是否生效
+
+	###重启服务
+	systemctl restart haproxy
+	service rsyslog restart
+
+	###查看日志记录
+	tailf /var/log/haproxy/haproxy.log

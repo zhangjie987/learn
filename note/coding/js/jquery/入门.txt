@@ -1,0 +1,45 @@
+//*********************JQuery扩展********************
+jQuery.fn = jQuery.prototype
+
+//1、类方法扩展
+$.extend({
+	min: function(a, b) { return a < b ? a : b; },
+	max: function(a, b) { return a > b ? a : b; }
+});
+$.min(a,3);
+
+//2、实例方法扩展
+$.fn.alertWhileClick=function(){};
+$.fn.extend({          
+    alertWhileClick:function() {            
+        $(this).click(function(){                 
+            alert($(this).val());           
+        });           
+    }       
+});       
+$("#input1").alertWhileClick();
+
+//3、用一个或多个其他对象来扩展一个对象，返回被扩展的对象
+var settings = { validate: false, limit: 5, name: "foo" };
+var options = { validate: true, name: "bar" };
+jQuery.extend(settings, options);
+结果：settings == { validate: true, limit: 5, name: "bar" }
+
+//4、prototype含义：类似java类的.class或者java对象的.getClass()
+var a=function(a,b){return a+b;} //类定义
+var b=new a() //类实例化
+var c ={};
+a.prototype.isPrototypeOf(b) //结果：true//b对象的prototype是a.prototype
+a.prototype.__proto__==b.__proto__.__proto__ //结果：true
+a.__proto__  //ƒ () { [native code] }
+c.__proto__  //{constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, __lookupGetter__: ƒ, …}
+a.__proto__.__proto__==c.__proto__  //结果：true
+a.__proto__.__proto__.isPrototypeOf(new Object())  //结果：true
+
+//5、数组、对象遍历
+var json = {
+    sh: '上海', bj: '北京'
+}
+var params = Object.keys(json).map(function (key) {
+    return encodeURIComponent(key) + "=" + encodeURIComponent(json[key]);
+}).join("&");

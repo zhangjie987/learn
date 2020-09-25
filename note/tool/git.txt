@@ -1,0 +1,39 @@
+git config --global user.email "zhangj.ie@foxmail.com"
+git config --global user.name "zhangjie987"
+
+git init  #当前目录初始化为git仓库
+git status
+git add .  #如错误执行，可执行git reset head进行撤销add操作
+git diff readme.txt 
+git add readme.txt
+git add . #添加发生变更文件到暂存区
+git commit -m "add distributed"
+git commit -m "" #提交到本地仓库
+git log
+git log --pretty=oneline
+git reset head xxx.java #撤销xxx.java文件提交到缓冲区
+git reset --hard HEAD^ #回退到上一版
+git reset --hard HEAD^^ #回退到倒数第二版
+git reset --hard 3628164 #回退到commit id为36...的版本
+git checkout -- readme.txt #放弃工作区文件修改
+
+ssh-keygen -t rsa -C "zhangj.ie@foxmail.com"
+ssh-keygen -t rsa -C "zj"
+
+git remote add origin https://github.com/zhangjie987/learn.git
+git remote add origin git@gitlab.bingosoft.net:zj/metro-depot.git   #关联远程仓库
+git remote add origin git@github.com:zhangjie987/learn.git
+git push -u origin master
+git push origin master  --allow-unrelated-histories
+git pull origin master
+git pull origin master --allow-unrelated-histories
+
+git rm test.txt
+git rm -r -n --cached ./bingosoft-metro-depot/.metadata      #列出要删除的文件
+git rm -r --cached ./bingosoft-metro-depot/.metadata           #删除文件夹
+git commit -m "删除远程.metadata文件夹"                                #提交
+git push origin master	                                                               #提交更新到远程仓库
+
+git clone git@github.com:zhangjie987/learn.git
+
+github:zhangj.ie@foxmail.com/zhangjie987/zjiyxm1987

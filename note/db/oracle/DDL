@@ -1,0 +1,11 @@
+--创建主键
+alter table aux_specialpersonnel
+add constraint FK_AUX_SPECIALPERSONNEL_ID primary key (PERSONNELID);
+
+--创建外键
+alter table course
+add constraint FK_co_st foreign key (code) references students(code);
+
+--增加字段注释
+comment on column Trn_Train.Status_Code is '车辆状态Code';
+comment on column Trn_Train.Status_Name is '车辆状态';

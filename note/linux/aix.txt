@@ -1,0 +1,84 @@
+dbf文件所在目录：/u02/oradata/HRPRD
+OracleHome：/u02/product/11.2.0/dbhome_1
+spfile：/u02/product/11.2.0/dbhome_1/dbs/spfileHRPRD.ora
+日志：/u02/product/11.2.0/dbhome_1/log
+
+$ ifconfig -a
+
+$ df -k #磁盘使用情况
+$ df -g #逻辑卷可用空间
+
+$ more aix_ps_n0/client/clsc45.log
+$ ls -l aix-ps-n0
+$ cat aix-ps-n0/client/clsc.log
+$ cd /u02/product/11.2.0/dbhome_1/log/diag/rdbms  #Permission denied
+
+$ ls -l #通ll
+$ who -b #该命令查看系统最后一次启动时间
+   .        system boot Feb 27 09:53
+
+
+$ errpt -a -j C34B4D8E
+$ errpt #该命令查看系统错误日志摘要
+IDENTIFIER TIMESTAMP  T C RESOURCE_NAME  DESCRIPTION
+DCB47997   0402001919 T H hdisk3         DISK OPERATION ERROR
+3C81E43F   0321161919 P U topsvcs        Late in sending heartbeat
+C34B4D8E   0226184719 T H ent3           TRANSMIT FAILURE
+C34B4D8E   0226181219 T H ent3           TRANSMIT FAILURE
+           TIMESTAMP：错误发生的时间，MMDDhhmmYY,依次表示月日时分年
+                      T：临时性错误，经过重试后已经恢复正常
+                        H：硬件故障 Hardware
+通过系统日志命令errpt看，从2月4日开始出现标识为C34B4D8E的日志，每半小时出现一次，到2月26日18:47最后一次出现，系统在2月27日9:53重新启动后没有再出现该错误日志
+
+
+$ errpt -a #显示系统错误日志详细报告，如下为摘取标识为“C34B4D8E”的日志完整报告
+---------------------------------------------------------------------------
+LABEL:          RRENT_TX_ERROR
+IDENTIFIER:     C34B4D8E
+
+Date/Time:       Mon Feb  4 06:30:03 CST 2019
+Sequence Number: 436098
+Machine Id:      00F741C04C00
+Node Id:         AIX_PS_N0
+Class:           H  硬件故障
+Type:            TEMP  错误类型为临时性错误
+WPAR:            Global
+Resource Name:   ent3
+Resource Class:  adapter
+Resource Type:   ethernet  硬件类型为以太网适配器，检测到错误的资源，并不代表这个资源有问题，而只是最先在它发现的
+Location:        U5877.001.9K8D026-P1-C3-T1
+
+VPD:
+        Network Address.............00145E997097
+        Displayable Message.........10 Gigabit Ethernet Adapter (ct3)
+
+Description
+TRANSMIT FAILURE
+
+        Recommended Actions
+        PERFORM PROBLEM DETERMINATION PROCEDURES
+
+Detail Data
+FILE NAME
+line: 695 file: rrent_transmit.c
+PCI ETHERNET STATISTICS
+6862 6131 088E 4CF0 0061 081B 0000 0000 6E7A E5FD 0000 00AA EE02 ED9D 0000 0000
+661C D95A 0000 0000 305D 016C 0000 03E9 9D3F 12DD 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0004 E100 0000 0000 0000 0005 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+DEVICE DRIVER INTERNAL STATE
+3333 3333 0000 0001 0001 2555
+SOURCE ADDRESS
+0014 5E99 7097
+
+$ alog -o -t boot  #系统启动错误日志，使用账号chlinwei登录服务器没权限查看系统启动日志
+0526-002 alog: Could not open file, /var/adm/ras/bootlog.
+Possible cause(s):
+        - The file does not exist.
+        - The user does not have the proper authorities for the file.
+
+$ last -100 #查看最近100次登录的用户信息

@@ -1,0 +1,26 @@
+CREATE TABLESPACE "TEST"
+datafile
+'/opt/dmdbms/data/DAMENG/TEST1.DBF' size 1024 autoextend on maxsize 16777215,
+'/opt/dmdbms/data/DAMENG/TEST2.DBF' size 1024 autoextend on maxsize 16777215 CACHE = NORMAL;
+
+DROP TABLESPACE TEST;
+
+510W数据占用926M表空间，平均每条数据0.18k
+字段含DATE(IND) CHAR(2)(IND) VARCHAR(50) VARCHAR(50) INTEGER INTEGER+INTEGER(IND)
+
+insert into ? select * from ? limit ?,?
+limit 0,200000;执行成功, 执行耗时19秒 557毫秒
+limit 200001,200000;执行成功, 执行耗时24秒 260毫秒
+limit 400001,200000;执行成功, 执行耗时54秒 810毫秒
+limit 600001,200000;执行成功, 执行耗时17秒 287毫秒
+limit 800001,200000;执行成功, 执行耗时12秒 689毫秒
+limit 1400001,200000;执行成功, 执行耗时46秒 432毫秒
+limit 1600001,200000;执行成功, 执行耗时49秒 349毫秒
+limit 2000001,200000;执行成功, 执行耗时31秒 989毫秒
+limit 2200001,200000;执行成功, 执行耗时14秒 966毫秒
+limit 2400001,200000;执行成功, 执行耗时11秒 643毫秒
+limit 2600001,200000;执行成功, 执行耗时18秒 391毫秒
+limit 2800001,200000;执行成功, 执行耗时9秒 171毫秒
+limit 3000001,200000;执行成功, 执行耗时20秒 256毫秒
+limit 3200001,200000;执行成功, 执行耗时6秒 622毫秒
+limit 3400001,200000;执行成功, 执行耗时9秒 231毫秒

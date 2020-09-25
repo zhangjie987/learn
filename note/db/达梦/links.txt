@@ -1,0 +1,13 @@
+表空间管理：
+	https://www.pianshen.com/article/5010792085/
+	https://blog.csdn.net/newbie_201612/article/details/100981074
+安装：
+	https://blog.csdn.net/u011638957/article/details/103728180
+水平分区：
+	https://blog.csdn.net/fengxiaozhenjay/article/details/106183265
+实时主备：
+	https://blog.csdn.net/sinat_20261711/article/details/101197288
+	https://www.cndba.cn/dave/article/3655
+MPP：
+	https://yq.aliyun.com/articles/114591
+	https://blog.csdn.net/transection/article/details/106549728
